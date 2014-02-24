@@ -1,8 +1,17 @@
+/**
+ * 
+ * @author JAVIER RODRÍGUEZ SOLER. 
+ * EJERCICIO APUESTAS
+ * Clase Principal
+ */
 
 public class Principal {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
+		// Llamamos a Ventana.
+		VentanaEquipo ventana = new VentanaEquipo();
+		ventana.setVisible(true);
 
 	}
 
