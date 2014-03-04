@@ -31,27 +31,13 @@ public class VentanaEquipo extends JFrame {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaEquipo frame = new VentanaEquipo();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	
+	private Equipo equipo;
+	
 	/**
 	 * Create the frame.
 	 */
-	public VentanaEquipo() {
+	public VentanaEquipo(Equipo equipoModificar) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 557, 334);
 		contentPane = new JPanel();
@@ -108,16 +94,24 @@ public class VentanaEquipo extends JFrame {
 		contentPane.add(textField_4);
 		textField_4.setColumns(10);
 		
+		//Creación del equipo.
+		equipo = equipoModificar;
+		
 		JButton btnGuardar = new JButton("Guardar ");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
-			//Serializamos la clase equipo en el objeto eq y le pasamos los datos al constructor.	
-			Equipo eq = new Equipo(textField.getText(),Integer.valueOf(textField_1.getText()),Integer.valueOf(textField_2.getText()), Integer.valueOf(textField_3.getText()), Integer.valueOf(textField_4.getText()));
-			ObjectOutputStream salida;
+			//Utilizamos los métodos mutadores para almacenar la información de los campos..	
+			
+				equipo.setNombre(textField.getText());
+				equipo.setGolesFavor(Integer.valueOf(textField_1.getText()));
+				equipo.setGolesContra(Integer.valueOf(textField_2.getText()));
+				equipo.setPartidosGanados(Integer.valueOf(textField_3.getText()));
+				equipo.setPartidosPerdidos(Integer.valueOf(textField_4.getText()));
+						ObjectOutputStream salida;
 			try{
 				salida = new ObjectOutputStream (new FileOutputStream ("clientes.ser")); //almacenamos el objeto en el archivo.
-				salida.writeObject(eq);
+				salida.writeObject(equipo);
 				if (salida!= null)
 					salida.close();
 			}
