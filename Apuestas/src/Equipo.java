@@ -23,7 +23,7 @@ public class Equipo implements Serializable{
 	//Constructor con parámetros.
 	public Equipo (String nom, int golesF, int golesC, int partidosG, int partidosP){
 	
-		//Introducimos los datos en los atributos con los respectivos parámetros.
+		//Introducimos los datos en los atributos con los respectivos parámetros utilizando los métodos SET
 	setNombre(nom);
 	setGolesFavor(golesF);
 	setGolesContra (golesC);
@@ -31,6 +31,19 @@ public class Equipo implements Serializable{
 	setPartidosPerdidos (partidosP);
 		
 		
+	}
+	
+	
+	// Constructor sin parametros 
+	public Equipo()
+	{
+		//Inicializamos en vacio.
+		setNombre("");
+		setGolesFavor(0);
+		setGolesContra (0);
+		setPartidosGanados (0);
+		setPartidosPerdidos (0);
+			
 	}
 	
 	
@@ -68,7 +81,7 @@ public class Equipo implements Serializable{
 	}
 	
 	// Método para recuperar los goles en contra.
-	public int setGolesContra ()
+	public int getGolesContra ()
 	{
 		return golesEncontra;
 	}

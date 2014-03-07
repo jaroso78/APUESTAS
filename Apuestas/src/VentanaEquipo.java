@@ -2,7 +2,7 @@
  * 
  * @author JAVIER RODRÍGUEZ SOLER. 
  * EJERCICIO APUESTAS
- * Clase  VentanEquipo
+ * Clase  VentanaEquipo
  */
 
 import java.awt.BorderLayout;
@@ -18,9 +18,11 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 
 public class VentanaEquipo extends JFrame {
@@ -37,9 +39,16 @@ public class VentanaEquipo extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
 	public VentanaEquipo(Equipo equipoModificar) {
+		
+		//Creación del equipo.
+				equipo = equipoModificar;
+				
+				
+				
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 557, 334);
+		setBounds(100, 100, 422, 334);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -50,78 +59,134 @@ public class VentanaEquipo extends JFrame {
 		contentPane.add(lblNombreDelEquipo);
 		
 		JLabel lblNombreDelEquipo_1 = new JLabel("Nombre del Equipo:");
-		lblNombreDelEquipo_1.setBounds(39, 37, 128, 30);
+		lblNombreDelEquipo_1.setBounds(10, 21, 128, 30);
 		contentPane.add(lblNombreDelEquipo_1);
 		
 		textField = new JTextField();
-		textField.setBounds(39, 61, 206, 20);
+		textField.setBounds(130, 21, 143, 20);
+		textField.setText(equipo.getNombre());
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		JLabel lblGolesAFavor = new JLabel("Goles a favor:");
-		lblGolesAFavor.setBounds(39, 103, 115, 14);
+		lblGolesAFavor.setBounds(10, 70, 115, 14);
 		contentPane.add(lblGolesAFavor);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(39, 134, 86, 20);
+		textField_1.setBounds(130, 62, 143, 20);
+		textField_1.setText(String.valueOf(equipo.getGolesFavor()));
 		contentPane.add(textField_1);
 		textField_1.setColumns(10);
 		
 		JLabel lblGolesEnContra = new JLabel("Goles en Contra:");
-		lblGolesEnContra.setBounds(146, 103, 99, 14);
+		lblGolesEnContra.setBounds(10, 109, 115, 14);
 		contentPane.add(lblGolesEnContra);
 		
 		textField_2 = new JTextField();
-		textField_2.setBounds(146, 134, 99, 20);
+		textField_2.setBounds(130, 106, 143, 20);
+		textField_2.setText(String.valueOf((equipo.golesEncontra)));
 		contentPane.add(textField_2);
 		textField_2.setColumns(10);
 		
 		JLabel lblPartidosGanados = new JLabel("Partidos Ganados:");
-		lblPartidosGanados.setBounds(39, 194, 99, 14);
+		lblPartidosGanados.setBounds(10, 158, 115, 14);
 		contentPane.add(lblPartidosGanados);
 		
 		textField_3 = new JTextField();
-		textField_3.setBounds(39, 219, 86, 20);
+		textField_3.setBounds(130, 155, 143, 20);
+		textField_3.setText (String.valueOf((equipo.partidosGanados)));
 		contentPane.add(textField_3);
 		textField_3.setColumns(10);
 		
 		JLabel lblPartidosEnContra = new JLabel("Partidos en contra:");
-		lblPartidosEnContra.setBounds(146, 194, 99, 14);
+		lblPartidosEnContra.setBounds(10, 202, 115, 14);
 		contentPane.add(lblPartidosEnContra);
 		
 		textField_4 = new JTextField();
-		textField_4.setBounds(146, 219, 99, 20);
+		textField_4.setBounds(130, 199, 143, 20);
+		textField_4.setText(String.valueOf(equipo.partidosPerdidos));
 		contentPane.add(textField_4);
 		textField_4.setColumns(10);
 		
-		//Creación del equipo.
-		equipo = equipoModificar;
 		
-		JButton btnGuardar = new JButton("Guardar ");
+		
+		JButton btnGuardar = new JButton("Guardar en disco");
+		btnGuardar.setBounds(10, 261, 138, 23);
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
-			//Utilizamos los métodos mutadores para almacenar la información de los campos..	
-			
 				equipo.setNombre(textField.getText());
 				equipo.setGolesFavor(Integer.valueOf(textField_1.getText()));
 				equipo.setGolesContra(Integer.valueOf(textField_2.getText()));
 				equipo.setPartidosGanados(Integer.valueOf(textField_3.getText()));
 				equipo.setPartidosPerdidos(Integer.valueOf(textField_4.getText()));
-						ObjectOutputStream salida;
-			try{
-				salida = new ObjectOutputStream (new FileOutputStream ("clientes.ser")); //almacenamos el objeto en el archivo.
-				salida.writeObject(equipo);
-				if (salida!= null)
-					salida.close();
-			}
-			catch (IOException ioexception){
-				System.err.println ("Error al abrir el archivo");
-			}
+				grabarEquipo();
 			
 			}
 		});
-		btnGuardar.setBounds(373, 60, 89, 23);
 		contentPane.add(btnGuardar);
+		
+		JButton btnLeer = new JButton("Leer en disco");
+		btnLeer.setBounds(158, 261, 115, 23);
+		btnLeer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			 leerEquipo();
+				textField.setText(equipo.getNombre());
+				textField_1.setText(Integer.toString(equipo.getGolesFavor()));
+				textField_2.setText(Integer.toString(equipo.getGolesContra()));
+				textField_3.setText(Integer.toString(equipo.getPartidosGanados()));
+				textField_4.setText(Integer.toString(equipo.getPartidosPerdidos()));
+			}
+		});
+		contentPane.add(btnLeer);
+		
+		JButton btnNewButton = new JButton("GUARDAR");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				equipo.setNombre(textField.getText());
+				equipo.setGolesFavor(Integer.valueOf(textField_1.getText()));
+				equipo.setGolesContra(Integer.valueOf(textField_2.getText()));
+				equipo.setPartidosGanados(Integer.valueOf(textField_3.getText()));
+				equipo.setPartidosPerdidos(Integer.valueOf(textField_4.getText()));
+			}
+		});
+		btnNewButton.setBounds(295, 21, 101, 57);
+		contentPane.add(btnNewButton);
+	}
+	
+	
+	//Método para leer equipo en disco.
+	public void leerEquipo()
+	{
+		ObjectInputStream entrada;
+		
+		try{
+			 entrada = new ObjectInputStream (new FileInputStream("clientes.ser"));
+			 equipo = (Equipo) entrada.readObject();
+			
+		}
+		catch (IOException ioexception) {
+			System.err.println("Error al leer el archivo");
+		}
+		catch (ClassNotFoundException clfex)
+		{
+			System.err.println("Error al leer el archivo");
+		}
+	}
+	
+	//Método para grabar el equipo en disco.
+	public void grabarEquipo()
+	{
+		ObjectOutputStream salida;
+		try{
+			salida = new ObjectOutputStream (new FileOutputStream ("clientes.ser")); //almacenamos el objeto en el archivo.
+			salida.writeObject(equipo);
+			if (salida!= null)
+				salida.close();
+		}
+		catch (IOException ioexception){
+			System.err.println ("Error al abrir el archivo");
+		}
+	
 	}
 }
