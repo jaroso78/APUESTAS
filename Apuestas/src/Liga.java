@@ -6,25 +6,28 @@
  */
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Liga implements Serializable {
 
 	// Definición atributos.
 	int numEquipos;
 	String nombreLiga;
-	Equipo equipos[];
+	
+	//Definición del ArrayList de Equipos.
+	ArrayList <Equipo> equipos = new ArrayList<Equipo>();
 
 	// Constructor
 	public Liga() {
 		// Inicializamos atributos con referencia.
 		numEquipos = 20;
-		equipos = new Equipo[numEquipos];
-		nombreLiga = "Liga española";
+		//equipos = new Equipo[numEquipos];
+			nombreLiga = "Liga española";
 
-		// inicializamos el array
+		// inicializamos el arraylist
 		for (int i = 0; i < numEquipos; i++) {
-			equipos[i] = new Equipo();
-		}
+			equipos.add( new Equipo());
+			}
 
 	}
 	
@@ -32,13 +35,12 @@ public class Liga implements Serializable {
 	//Constructor sobrecarga con parámetros.
 	public Liga(int numero, String nombre) {
 		numEquipos = numero;
-		equipos = new Equipo[numEquipos];
 		nombreLiga = nombre;
 
-		// inicializamos el array
+		// inicializamos el arraylist
 
 		for (int i = 0; i < numEquipos; i++) {
-			equipos[i] = new Equipo();
+			equipos.add( new Equipo());
 		}
 
 	}
@@ -61,12 +63,13 @@ public class Liga implements Serializable {
 
 	//Método para recuperar el equipo devolviendo el correspondiente al índice pasado por parametro.
 	public Equipo getEquipo(int numero) {
-		return equipos[numero];
-	}
+				return equipos.get(numero);
+		}
 
-	//Metodo para modficiar introduciendo en el array en el índice pasado por parámetro el equipo.
+	//Metodo para modficiar introduciendo en el arraylist el índice pasado por parámetro el equipo.
 	public void setEquipo(Equipo equipo, int numero) {
-		equipos[numero] = equipo;
+		equipos.set(numero, equipo);
+		
 
 	}
 
