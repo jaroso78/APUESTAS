@@ -20,17 +20,21 @@ public class Liga implements Serializable {
 	// Constructor
 	public Liga() {
 		// Inicializamos atributos con referencia.
-		numEquipos = 20;
-		//equipos = new Equipo[numEquipos];
-			nombreLiga = "Liga española";
-
+		numEquipos = 0;
+		nombreLiga = "Liga española";
 		// inicializamos el arraylist
 		for (int i = 0; i < numEquipos; i++) {
 			equipos.add( new Equipo());
 			}
-
 	}
 	
+	
+	public void nuevoEquipo()
+	{
+		equipos.add(new Equipo());
+		numEquipos++;
+		
+	}
 	
 	//Constructor sobrecarga con parámetros.
 	public Liga(int numero, String nombre) {
@@ -71,6 +75,13 @@ public class Liga implements Serializable {
 		equipos.set(numero, equipo);
 		
 
+	}
+	
+	//Método para eliminar un Equipo y restarle.
+	public void eraseEquipo(Equipo equipo)
+	{
+	   equipos.remove(equipo);
+	   numEquipos--;
 	}
 
 }

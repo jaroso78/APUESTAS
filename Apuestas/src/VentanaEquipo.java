@@ -5,16 +5,16 @@
  * Clase  VentanaEquipo
  */
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JEditorPane;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -36,15 +36,20 @@ public class VentanaEquipo extends JFrame {
 	
 	private Equipo equipo;
 	
+	JFrame frame; // Jframe para el Jdialog del MessageBox.
+		
 	/**
 	 * Create the frame.
 	 */
 	
-	public VentanaEquipo(Equipo equipoModificar) {
+	public VentanaEquipo(Equipo equipoModificar,  final JComboBox<Equipo> comboBox, final boolean modifica, final JTextField textField_5) {
+		
+		setTitle("---.Ventana Equipo.---");// Colocamos el título de la ventana.
+		
 		
 		//Creación del equipo.
 				equipo = equipoModificar;
-				
+		
 				
 				
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -113,13 +118,26 @@ public class VentanaEquipo extends JFrame {
 		JButton btnGuardar = new JButton("Guardar en disco");
 		btnGuardar.setBounds(10, 261, 138, 23);
 		btnGuardar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {   //Guardamos los datos en Equipo
 				equipo.setNombre(textField.getText());
-				equipo.setGolesFavor(Integer.valueOf(textField_1.getText()));
-				equipo.setGolesContra(Integer.valueOf(textField_2.getText()));
-				equipo.setPartidosGanados(Integer.valueOf(textField_3.getText()));
-				equipo.setPartidosPerdidos(Integer.valueOf(textField_4.getText()));
-				grabarEquipo();
+				
+				if ((compruebaNumero(textField_1.getText())==true) & (compruebaNumero(textField_2.getText())==true) & (compruebaNumero(textField_3.getText())==true) & (compruebaNumero(textField_4.getText())==true)  ) {
+					equipo.setGolesFavor(Integer.valueOf(textField_1.getText()));
+					equipo.setGolesContra(Integer.valueOf(textField_2.getText()));
+					equipo.setPartidosGanados(Integer.valueOf(textField_3.getText()));
+					equipo.setPartidosPerdidos(Integer.valueOf(textField_4.getText()));
+				    grabarEquipo(); //Invocamos el método para lamcenar en el disco.
+				 if (modifica==false)
+					{
+						comboBox.addItem(equipo);
+						textField_5.setText(String.valueOf(comboBox.getItemCount()));
+					}
+				
+			} else
+			{
+				JOptionPane.showMessageDialog(frame,
+					    "Compruebe que haya introducido valores numéricos "); // Mostramos un MessageBox para indicarle que compruebe.
+			}
 			
 			}
 		});
@@ -140,14 +158,33 @@ public class VentanaEquipo extends JFrame {
 		});
 		contentPane.add(btnLeer);
 		
+		
+		
 		JButton btnNewButton = new JButton("GUARDAR");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				equipo.setNombre(textField.getText());
-				equipo.setGolesFavor(Integer.valueOf(textField_1.getText()));
-				equipo.setGolesContra(Integer.valueOf(textField_2.getText()));
-				equipo.setPartidosGanados(Integer.valueOf(textField_3.getText()));
-				equipo.setPartidosPerdidos(Integer.valueOf(textField_4.getText()));
+				
+				
+				if ((compruebaNumero(textField_1.getText())==true) & (compruebaNumero(textField_2.getText())==true) & (compruebaNumero(textField_3.getText())==true) & (compruebaNumero(textField_4.getText())==true)  ) {
+					equipo.setGolesFavor(Integer.valueOf(textField_1.getText()));
+					equipo.setGolesContra(Integer.valueOf(textField_2.getText()));
+					equipo.setPartidosGanados(Integer.valueOf(textField_3.getText()));
+					equipo.setPartidosPerdidos(Integer.valueOf(textField_4.getText()));
+					
+					if (modifica==false)
+					{
+						comboBox.addItem(equipo);
+						textField_5.setText(String.valueOf(comboBox.getItemCount()));
+					}
+					
+					
+				} else
+				{
+					JOptionPane.showMessageDialog(frame,
+						    "Compruebe que haya introducido valores numéricos ");
+				}
+						
 			}
 		});
 		btnNewButton.setBounds(295, 21, 101, 57);
@@ -189,4 +226,30 @@ public class VentanaEquipo extends JFrame {
 		}
 	
 	}
+	
+	
+	//Metodo que devuelve un boolean true si el valor pasado por referencia es un número.
+	public boolean compruebaNumero( String valor)
+	{
+	
+		try
+		{
+			if (Integer.valueOf(valor)>=0){ //comprobamos que sea mayor que 0
+				
+				return true;
+			} else
+			{
+				JOptionPane.showMessageDialog(frame,
+					    "Compruebe que haya introducido valores superiores o iguales a 0 "); // En caso contrario se lo índicamos.
+				return false;
+			}
+			
+			
+		 } catch (NumberFormatException nfe){ // Comprobamos que es un número
+				 		
+			 return false;
+			 }
+	
+	}
+	
 }
