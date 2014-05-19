@@ -19,6 +19,10 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 
 
 public class Apuestas extends JFrame {
@@ -26,6 +30,12 @@ public class Apuestas extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 
+	
+	//Conexión a la bd.
+	
+	Connection conexion = null; // Maneja las conexiones.
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -46,6 +56,20 @@ public class Apuestas extends JFrame {
 	 * Create the frame.
 	 */
 	public Apuestas() {
+		
+		//Conectarnos a la base de datos.
+		
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			conexion = DriverManager.getConnection("jdbc:mysql://localhost/apuestas","root","");
+					}
+		catch(SQLException excepcionSql){
+			excepcionSql.printStackTrace();
+		}
+		catch (ClassNotFoundException noEncontroClase ){
+			noEncontroClase.printStackTrace();
+		}
+		
 		
 		
 		setTitle("---.Apuestas.---");// Colocamos el título de la ventana.
@@ -78,7 +102,7 @@ public class Apuestas extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				 Liga liga = new Liga();
+				 Liga liga = new Liga(conexion);
 					//Pasamos el objeto como parametro en el constructor de VentanaLiga
 					 VentanaLiga frame = new VentanaLiga (liga);
 					 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cerramos sólo

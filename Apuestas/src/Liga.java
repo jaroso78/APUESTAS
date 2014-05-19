@@ -6,6 +6,10 @@
  */
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Liga implements Serializable {
@@ -13,18 +17,30 @@ public class Liga implements Serializable {
 	// Definición atributos.
 	int numEquipos;
 	String nombreLiga;
+	int idLiga;
 	
 	//Definición del ArrayList de Equipos.
 	ArrayList <Equipo> equipos = new ArrayList<Equipo>();
 
+	
+	// DB
+	
+	Connection conexion = null;
+	Statement instruccion = null;
+	
+	
 	// Constructor
-	public Liga() {
+	public Liga(Connection conexion) {
+		
+		this.conexion = conexion;
+		
+		leerLiga();
 		// Inicializamos atributos con referencia.
-		numEquipos = 0;
-		nombreLiga = "Liga española";
-		// inicializamos el arraylist
-		for (int i = 0; i < numEquipos; i++) {
-			equipos.add( new Equipo());
+		//numEquipos = 0;
+		//nombreLiga = "Liga española";
+		//inicializamos el arraylist
+	for (int i = 0; i < numEquipos; i++) {
+		equipos.add( new Equipo());
 			}
 	}
 	
@@ -33,11 +49,16 @@ public class Liga implements Serializable {
 	{
 		equipos.add(new Equipo());
 		numEquipos++;
+	//	nuevoEquipoDB(getEquipo(0));
+		
+		
 		
 	}
 	
 	//Constructor sobrecarga con parámetros.
-	public Liga(int numero, String nombre) {
+	public Liga(int numero, String nombre, Connection conexion) {
+		
+		this.conexion = conexion;
 		numEquipos = numero;
 		nombreLiga = nombre;
 
@@ -82,6 +103,42 @@ public class Liga implements Serializable {
 	{
 	   equipos.remove(equipo);
 	   numEquipos--;
+	}
+	
+	
+	private void leerLiga()
+	{
+		try
+		{
+			instruccion = (Statement) conexion.createStatement();
+			ResultSet conjuntoResultados = instruccion.executeQuery("Select *from  ligas LIMIT 1");
+			conjuntoResultados.next();
+			
+			this.nombreLiga = (String) conjuntoResultados.getObject("nombre");
+			this.numEquipos = (int) conjuntoResultados.getObject("numEquipos");
+			this.idLiga = (int) conjuntoResultados.getObject ("idLiga");
+		}
+		catch(SQLException excepcionSql)
+		{
+			excepcionSql.printStackTrace();
+		}
+	}
+	
+	
+	private void nuevoEquipoDB(Equipo equipo)
+	{
+		try{
+		instruccion = (Statement) conexion.createStatement();
+		String sql_inst = "INSERT into Equipos (idLiga,nombreEquipo, golesFavor, golesEnContra, partidosGanados, partidosPerdidos )";
+		sql_inst = sql_inst + " VALUES ( "+idLiga+",'"+equipo.getNombre()+"',"+equipo.getGolesFavor()+","+equipo.golesEncontra+","+equipo.partidosGanados+","+equipo.partidosPerdidos+")";
+		System.out.println(sql_inst);
+		instruccion.executeUpdate(sql_inst);
+		}
+		catch(SQLException excepcionSql)
+		{
+			excepcionSql.printStackTrace();
+		}
+		
 	}
 
 }
